@@ -5,26 +5,35 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MazeController : MonoBehaviour {
-	public int[,] map;
-	public Vector2 startPosition;
-	public Vector2 endPosition;
-	public GameObject wallPrefab;
-	public GameObject exitPrefab;
-	public GameObject startPrefab;
-	public GameObject pathPrefab;
-	public GeneticAlgorithm geneticAlgorithm;
-	public List<int> fittestDirections;
-	public List<GameObject> pathTiles;
-	public GameObject text;
+    // Mapa del laberinto
+    public int[,] map;
+    // Posición de inicio y fin en el laberinto
+    public Vector2 startPosition;
+    public Vector2 endPosition;
+    // Prefabs para representar los muros, inicio, fin y camino en el laberinto
+    public GameObject wallPrefab;
+    public GameObject exitPrefab;
+    public GameObject startPrefab;
+    public GameObject pathPrefab;
+    // Instancia del algoritmo genético
+    public GeneticAlgorithm geneticAlgorithm;
+    // Lista de direcciones del mejor individuo
+    public List<int> fittestDirections;
+    // Lista de tiles del camino
+    public List<GameObject> pathTiles;
+    // Objeto para mostrar información en la pantalla
+    public GameObject text;
 
-	public GameObject PrefabByTile(int tile) {
+    // Retorna el prefab correspondiente según el tipo de tile
+    public GameObject PrefabByTile(int tile) {
 		if (tile == 1) return wallPrefab;
 		if (tile == 5) return startPrefab;
 		if (tile == 8) return exitPrefab;
 		return null;
 	}
 
-	public Vector2 Move(Vector2 position, int direction) {
+    // Mueve la posición en la dirección indicada
+    public Vector2 Move(Vector2 position, int direction) {
 		switch (direction) {
 		case 0: // North
 			if (position.y - 1 < 0 || map [(int)(position.y - 1), (int)position.x] == 1) {
@@ -58,7 +67,8 @@ public class MazeController : MonoBehaviour {
 		return position;
 	}
 
-	public double TestRoute(List<int> directions) {
+    // Calcula la aptitud de una ruta dada una lista de direcciones
+    public double TestRoute(List<int> directions) {
 		Vector2 position = startPosition;
 
 		for (int directionIndex = 0; directionIndex < directions.Count; directionIndex++) {
@@ -75,7 +85,8 @@ public class MazeController : MonoBehaviour {
 		return result;
 	}
 
-	public void Populate() {
+    // Población inicial del laberinto con los prefabs
+    public void Populate() {
 		Debug.Log ("length(0)=" + map.GetLength(0));
 		Debug.Log ("length(1)=" + map.GetLength(1));
 
@@ -90,39 +101,45 @@ public class MazeController : MonoBehaviour {
 		}
 	}
 
-	// Use this for initialization
-	void Start () {
-		map = new int[,] {
-      {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-      {1,0,1,0,0,0,0,0,1,1,1,0,0,0,1},
-      {8,0,0,0,0,0,0,0,1,1,1,0,0,0,1},
-      {1,0,0,0,1,1,1,0,0,1,0,0,0,0,1},
-      {1,0,0,0,1,1,1,0,0,0,0,0,1,0,1},
-      {1,1,0,0,1,1,1,0,0,0,0,0,1,0,1},
-      {1,0,0,0,0,1,0,0,0,0,1,1,1,0,1},
-      {1,0,1,1,0,0,0,1,0,0,0,0,0,0,5},
-      {1,0,1,1,0,0,0,1,0,0,0,0,0,0,1},
-      {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-      };
-		Populate ();
-		startPosition = new Vector2 (14f, 7f);
-		endPosition = new Vector2 (0f, 2f);
-		fittestDirections = new List<int> ();
-		pathTiles = new List<GameObject> ();
+    // Inicialización del laberinto y el algoritmo genético
+    void Start () {
+        // Mapa del laberinto (0: espacio vacío, 1: muro, 5: inicio, 8: salida)
+        map = new int[,] {
+			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+			{1,0,1,0,0,0,0,0,1,1,1,0,0,0,5},
+			{1,0,0,0,0,0,0,0,1,1,1,0,0,0,1},
+			{1,0,0,0,1,1,1,0,0,1,0,0,0,0,1},
+			{1,0,0,0,1,1,1,0,0,0,0,0,1,0,1},
+			{1,1,0,0,1,1,1,0,0,0,0,0,1,0,1},
+			{8,0,0,0,0,1,0,0,0,0,1,1,1,0,1},
+			{1,0,1,1,0,0,0,1,0,0,0,0,0,0,1},
+			{1,0,1,1,0,0,0,1,0,0,0,0,0,0,1},
+			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+		};
+        // Población del mapa inicial
+        Populate();
+        // Posición de inicio y fin
+        startPosition = new Vector2(14f, 1f);
+        endPosition = new Vector2(0f, 6f);
+        fittestDirections = new List<int>();
+        pathTiles = new List<GameObject>();
 
-		geneticAlgorithm = new GeneticAlgorithm ();
+        // Inicialización del algoritmo genético
+        geneticAlgorithm = new GeneticAlgorithm ();
 		geneticAlgorithm.mazeController = this;
 		geneticAlgorithm.Run ();
 	}
 
-	public void ClearPathTiles() {
+    // Borra los tiles del camino actual
+    public void ClearPathTiles() {
 		foreach (GameObject pathTile in pathTiles) {
 			Destroy(pathTile);
 		}
 		pathTiles.Clear();
 	}
 
-	public void RenderFittestChromosomePath() {
+    // Renderiza el camino del cromosoma más apto
+    public void RenderFittestChromosomePath() {
 		ClearPathTiles ();
 		Genome fittestGenome = geneticAlgorithm.genomes[geneticAlgorithm.fittestGenome];
 		List<int> fittestDirections = geneticAlgorithm.Decode (fittestGenome.bits);
@@ -135,12 +152,14 @@ public class MazeController : MonoBehaviour {
 			pathTiles.Add (pathTile);
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Actualización en cada frame
+    void Update () {
 		if (geneticAlgorithm.busy) geneticAlgorithm.Epoch ();
 		RenderFittestChromosomePath ();
-		TextMesh textMesh = text.GetComponent<TextMesh> ();
+
+        // Mostrar la generación actual y la posición final alcanzada
+        TextMesh textMesh = text.GetComponent<TextMesh> ();
 		Vector3 lastPosition = pathTiles.Last ().transform.position;
 		textMesh.text = "Generation: " + geneticAlgorithm.generation + " (" + lastPosition.x + "," + lastPosition.z + ")";
 	}
