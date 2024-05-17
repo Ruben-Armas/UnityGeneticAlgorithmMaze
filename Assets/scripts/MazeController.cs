@@ -121,6 +121,23 @@ public class MazeController : MonoBehaviour {
         // Posición de inicio y fin
         startPosition = new Vector2(14f, 1f);
         endPosition = new Vector2(0f, 6f);
+		
+        /*map = new int[,] {
+			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+			{1,0,1,0,0,0,0,0,1,1,1,0,0,0,1},
+			{8,0,0,0,0,0,0,0,1,1,1,0,0,0,1},
+			{1,0,0,0,1,1,1,0,0,1,0,0,0,0,1},
+			{1,0,0,0,1,1,1,0,0,0,0,0,1,0,1},
+			{1,1,0,0,1,1,1,0,0,0,0,0,1,0,1},
+			{1,0,0,0,0,1,0,0,0,0,1,1,1,0,1},
+			{1,0,1,1,0,0,0,1,0,0,0,0,0,0,5},
+			{1,0,1,1,0,0,0,1,0,0,0,0,0,0,1},
+			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+		};
+        Populate();
+        startPosition = new Vector2(14f, 7f);
+        endPosition = new Vector2(0f, 2f);
+		*/
         fittestDirections = new List<int>();
         pathTiles = new List<GameObject>();
 

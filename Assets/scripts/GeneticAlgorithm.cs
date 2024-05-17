@@ -8,9 +8,13 @@ public class GeneticAlgorithm {
 	public List<Genome> genomes;
 	public List<Genome> lastGenerationGenomes;
 
-	public int populationSize = 140;
-	public double crossoverRate = 0.7f;
-	public double mutationRate = 0.001f;
+    public int populationSize = 200;	// Ajustado de 140 a 200
+    public double crossoverRate = 0.85; // Ajustado de 0.7 a 0.85
+    public double mutationRate = 0.005; // Ajustado de 0.001 a 0.005
+
+    //public int populationSize = 140;
+	//public double crossoverRate = 0.7f;
+	//public double mutationRate = 0.001f;
 	public int chromosomeLength = 70;
 	public int geneLength = 2;
 
